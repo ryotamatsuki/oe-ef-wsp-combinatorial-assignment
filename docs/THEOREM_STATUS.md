@@ -14,17 +14,31 @@ Evidence:
 - analytic OE proof over the full continuous fractional feasible set;
 - numerical LP self-attack over the original continuous feasible set as corroboration only.
 
-## T2 — Acceptable-singletons eight-type extension
+## T2 — Arbitrary-n, two-good acceptable-singletons existence theorem
 
-**Status: VERIFIED COMPUTATIONAL EXTENSION; ANALYTIC FREEZE PENDING.**
+**Status: ANALYTICALLY CLOSED / FROZEN POSITIVE THEOREM.**
 
-Add `J: a>b>ab>empty` and `K: b>a>ab>empty`. The same explicit mechanism passes exact feasibility, EF, and full SD-SP checks on all `8^3=512` profiles and all 10,752 ordered deviations. Continuous OE LP self-attack finds no positive improvement within numerical tolerance.
+For every `n>=2`, two unit-supply goods `a,b`, and the full strict-ranking domain satisfying
 
-## C1 — Arbitrary-n, two-good acceptable-singletons extension
+`a > empty` and `b > empty`,
 
-**Status: CONJECTURE / SCAFFOLD.**
+there exists an explicit fractional mechanism satisfying feasibility, OE, EF, and full bundle-level SD-strategy-proofness.
 
-Candidate: total nonempty probability `2/n`, no `ab`, singleton allocation determined only by whether the report has `a>b` or `b>a`. Exact finite tests cover `n=2,...,10` for feasibility, EF, and full SD-SP. No general theorem is claimed here.
+The rule gives every agent total nonempty probability `2/n`, zero probability of `ab`, outside probability `1-2/n`, and uses a closed-form two-singleton eating allocation based only on whether the report has `a>b` or `b>a`.
+
+The proof in `theory/arbitrary_n_two_goods.md` is fully analytic:
+- feasibility is checked in all `k=#L` regimes;
+- bundle-level EF follows from the complete cumulative-cutoff forms;
+- full SD-SP follows from direct cross-class report inequalities;
+- OE is proved against the original continuous fractional feasible set, not a candidate face or grid.
+
+The earlier three-agent eight-type acceptable-singletons result is a corollary of T2 and no longer has a separate pending analytic status.
+
+## Boundary implication
+
+T2 identifies a precise applicability boundary: the proof requires both singletons to be ranked above the outside option. It does **not** cover any type with `empty > a` or `empty > b`.
+
+The next search therefore begins with minimal one-singleton-unacceptable extensions before adding types with both singletons unacceptable.
 
 ## Invalidated result
 
