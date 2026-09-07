@@ -1,4 +1,4 @@
-"""Canonical preference definitions for the 3-agent, 2-good project."""
+"""Canonical preference definitions for the two-good bundle-assignment project."""
 
 BUNDLES = ("a", "b", "ab", "empty")
 
@@ -15,6 +15,25 @@ EIGHT_TYPE_ACCEPTABLE_SINGLETONS = {
     **SIX_TYPE_RANKINGS,
     "J": ("a", "b", "ab", "empty"),
     "K": ("b", "a", "ab", "empty"),
+}
+
+# Minimal boundary types: exactly one singleton is below the outside option.
+# Mirror partners are obtained by swapping a and b.
+ONE_SINGLETON_UNACCEPTABLE = {
+    "H_A": ("a", "ab", "empty", "b"),
+    "H_B": ("b", "ab", "empty", "a"),
+    "P_A": ("ab", "a", "empty", "b"),
+    "P_B": ("ab", "b", "empty", "a"),
+    "U_A": ("a", "empty", "ab", "b"),
+    "U_B": ("b", "empty", "ab", "a"),
+    "W_A": ("a", "empty", "b", "ab"),
+    "W_B": ("b", "empty", "a", "ab"),
+}
+
+# First both-singletons-unacceptable pair for the second boundary attack.
+BOTH_SINGLETONS_UNACCEPTABLE_PAIR = {
+    "T_A": ("ab", "empty", "a", "b"),
+    "T_B": ("ab", "empty", "b", "a"),
 }
 
 LEFT_SIX = frozenset({"A", "E", "C"})
