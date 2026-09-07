@@ -4,96 +4,71 @@
 
 **Status: VERIFIED RESTRICTED-DOMAIN THEOREM.**
 
-Domain `D†={A,B,E,F,C,D}` with full strict rankings as defined in `src/preferences.py`.
-For three agents and two unit-supply goods, the explicit rule in `theory/six_type_explicit_mechanism.md` satisfies fractional feasibility, OE, EF, and full bundle-level SD-strategy-proofness.
+Domain `D†={A,B,E,F,C,D}` with full strict rankings as defined in `src/preferences.py`. For three agents and two unit-supply goods, the explicit rule in `theory/six_type_explicit_mechanism.md` satisfies fractional feasibility, OE, EF, and full bundle-level SD-strategy-proofness.
 
-Evidence:
-- exact rational checks of all 216 profiles;
-- exact rational checks of all 3,888 non-trivial EF cutoff inequalities;
-- exact rational checks of all 3,240 ordered unilateral deviations;
-- analytic OE proof over the full continuous fractional feasible set;
-- numerical LP self-attack over the original continuous feasible set as corroboration only.
+Evidence: 216 profiles, 3,888 non-trivial EF cutoff inequalities, 3,240 unilateral deviations, analytic OE proof over the full continuous fractional feasible set, and independent numerical self-attack.
 
 ## T2 — Arbitrary-n, two-good acceptable-singletons existence theorem
 
 **Status: ANALYTICALLY CLOSED / FROZEN POSITIVE THEOREM.**
 
-For every `n>=2`, two unit-supply goods `a,b`, and the full strict-ranking domain satisfying
-
-`a > empty` and `b > empty`,
-
-there exists an explicit fractional mechanism satisfying feasibility, OE, EF, and full bundle-level SD-strategy-proofness.
-
-The rule gives every agent total nonempty probability `2/n`, zero probability of `ab`, outside probability `1-2/n`, and uses a closed-form two-singleton eating allocation based only on whether the report has `a>b` or `b>a`.
+For every `n>=2`, two unit-supply goods `a,b`, and the full strict-ranking domain satisfying `a > empty` and `b > empty`, there exists an explicit fractional mechanism satisfying feasibility, OE, EF, and full bundle-level SD-strategy-proofness.
 
 The proof in `theory/arbitrary_n_two_goods.md` is fully analytic and works against the original continuous fractional feasible set.
 
-## T3 — First minimal outside-option crossing extension
+## T3 — One-sided H crossing
+
+**Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
+
+For `n=3`, `D_H = D8_ACCEPTABLE_SINGLETONS + {H_A}`, where `H_A: a > ab > empty > b`, admits an exact rational OE+EF+WSP mechanism on all 729 ordered profiles. See `docs/BOUNDARY_ATTACK_1_RESULT.md` and `src/boundary1_certificate.py`.
+
+## T4 — One-sided pair-first crossing
+
+**Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
+
+For `n=3`, `D_PA = D8_ACCEPTABLE_SINGLETONS + {P_A}`, where `P_A: ab > a > empty > b`, admits a closed-form OE+EF+WSP mechanism on all 729 ordered profiles.
+
+Certificate facts: 13,122 EF cutoffs PASS, 17,496 deviations WSP PASS, minimum positive WSP margin `1/6`, maximum allocation denominator 6, exact 22-vertex continuous feasible polytope, and positive rational SD-support weights with denominator at most 15. See `docs/BOUNDARY_ATTACK_PA_RESULT.md` and `src/boundary2_pa_certificate.py`.
+
+## T5 — Two-sided H mirror crossing
 
 **Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
 
 For `n=3`, define
 
-`D_H = D8_ACCEPTABLE_SINGLETONS + {H_A}`
+`D_H_MIRROR = D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`
 
-with `H_A: a > ab > empty > b`.
+with
 
-An exact rational mechanism exists satisfying feasibility, OE, EF, and WSP on all `9^3=729` ordered profiles.
+- `H_A: a > ab > empty > b`;
+- `H_B: b > ab > empty > a`.
 
-Certificate facts:
-- 729 profiles;
-- 13,122 non-trivial EF cutoff inequalities: exact PASS;
-- 17,496 ordered unilateral deviations: exact WSP PASS;
-- 5,970 deviations use the WSP equality branch;
-- minimum positive WSP margin among non-equality deviations: `1/1000`;
-- maximum allocation denominator: 12,000;
-- every allocation is supported as OE by strictly positive bundle-SD criterion weights and checked against all 22 vertices of the original fractional feasible polytope.
+A closed-form repair of singleton PS satisfies feasibility, OE, EF, and WSP on all `10^3=1,000` ordered profiles.
 
-Consequently, adding a single `H_A` type does **not** generate impossibility.
-
-## T4 — Pair-first minimal outside-option crossing extension
-
-**Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
-
-For `n=3`, define
-
-`D_PA = D8_ACCEPTABLE_SINGLETONS + {P_A}`
-
-with `P_A: ab > a > empty > b`.
-
-A closed-form repair of singleton PS exists satisfying feasibility, OE, EF, and WSP on all 729 ordered profiles.
-
-The mechanism differs from singleton PS at only 13 profiles: the permutations of `(X,P_A,P_A)` for `X in {A,E,C,J}` and `(P_A,P_A,P_A)`.
+The mechanism changes singleton PS at exactly 12 ordered profiles: permutations of `(X,H_A,H_A)` and `(X,H_B,H_B)` for `X in {C,D}`.
 
 Certificate facts:
-- 729 profiles;
-- 13,122 non-trivial EF cutoff inequalities: exact PASS;
-- 17,496 ordered unilateral deviations: exact WSP PASS;
-- 6,204 WSP equality deviations;
+- 1,000 profiles;
+- 18,000 non-trivial EF cutoff inequalities: exact PASS;
+- 27,000 ordered unilateral deviations: exact WSP PASS;
+- 8,328 WSP equality deviations;
 - minimum positive WSP margin: `1/6`;
 - maximum allocation denominator: 6;
 - the original continuous feasible polytope is reconstructed exactly from 14 facets and has 22 vertices;
-- every profile has a strictly positive rational SD-support vector with denominator at most 15;
-- minimum support weight: `1/15`;
-- OE support verification is exact rational arithmetic and does not rely on candidate-face completeness or floating LP output.
+- every profile has a strictly positive rational SD-support vector with denominator at most 14;
+- minimum support weight: `1/14`.
 
-The certificate is implemented in `src/boundary2_pa_certificate.py` and tested in `tests/test_boundary2_pa_certificate.py`.
-
-Consequently, the pair-first one-singleton-unacceptable type `P_A` alone is also not an impossibility core.
+The mechanism is WSP but not full SD-strategy-proof; this distinction is explicitly regression-tested. See `docs/BOUNDARY_ATTACK_H_MIRROR_RESULT.md`, `src/boundary_h_mirror_certificate.py`, and `tests/test_boundary_h_mirror_certificate.py`.
 
 ## Boundary implication
 
-T2 identifies the clean analytic positive domain. T3 and T4 show that crossing that boundary in one direction by either adjacent-swap type `H_A` or `P_A` still permits OE+EF+WSP for three agents.
+T2 gives the clean analytic positive domain. T3 and T4 show that one-sided adjacent-swap outside-option crossing remains SAT. T5 shows that even two-sided H-type mirror crossing remains SAT.
 
-The next frontier is **two-sided outside-option crossing**, beginning with the mirror-pair domain
-
-`D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`,
-
-followed, if SAT, by
+The next frontier is the pair-first mirror domain
 
 `D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`.
 
-Only after the one-singleton-unacceptable mirror-pair frontier is mapped should the search move to types with both singletons below the outside option.
+If that is also SAT, test the remaining one-singleton-unacceptable U/W mirror pairs before escalating to types with both singletons below the outside option.
 
 ## Invalidated result
 
