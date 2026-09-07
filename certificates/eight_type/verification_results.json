@@ -1,0 +1,11 @@
+{
+  "domain": "D8_ACCEPTABLE_SINGLETONS",
+  "profiles": 512,
+  "ef_nontrivial_cutoffs": 9216,
+  "ordered_unilateral_deviations": 10752,
+  "exact_feasibility": "PASS",
+  "exact_envy_freeness": "PASS",
+  "exact_full_sd_strategyproofness": "PASS",
+  "oe_lp_self_attack_max_gain": 8.881784197001252e-16,
+  "theorem_status": "computational extension; analytic freeze pending"
+}
