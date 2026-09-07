@@ -202,18 +202,11 @@ theorem strictSD_preferredSingleton_gt
     (hstrict : StrictAtSomeCutoff t y x) :
     preferredSingleton (isLeft t) x < preferredSingleton (isLeft t) y := by
   rcases hstrict with hs1 | hs2 | hs3
-  · cases t <;>
-      simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
-        RealRow.prob, first, second, third] at hs1 ⊢ <;>
-      linarith
-  · cases t <;>
-      simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
-        RealRow.prob, RealRow.nonemptyMass, first, second, third] at hs2 ⊢ <;>
-      linarith
-  · cases t <;>
-      simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
+  all_goals
+    cases t <;>
+      norm_num [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
         RealRow.prob, RealRow.mass, RealRow.nonemptyMass,
-        first, second, third] at hs3 ⊢ <;>
+        first, second, third] at * <;>
       linarith
 
 /--
