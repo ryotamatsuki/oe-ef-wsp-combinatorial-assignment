@@ -30,13 +30,6 @@ def Nonnegative (x : RealRow) : Prop :=
 
 end RealRow
 
-@[ext] theorem RealRow.ext_fields {x y : RealRow}
-    (ha : x.a = y.a) (hb : x.b = y.b)
-    (hab : x.ab = y.ab) (he : x.empty = y.empty) : x = y := by
-  cases x
-  cases y
-  simp_all
-
 /-- A three-agent outcome over real-valued bundle probabilities. -/
 structure RealOutcome where
   r0 : RealRow
@@ -54,12 +47,6 @@ def goodBMass (x : RealOutcome) : ℝ :=
   x.r0.b + x.r1.b + x.r2.b + x.r0.ab + x.r1.ab + x.r2.ab
 
 end RealOutcome
-
-@[ext] theorem RealOutcome.ext_rows {x y : RealOutcome}
-    (h0 : x.r0 = y.r0) (h1 : x.r1 = y.r1) (h2 : x.r2 = y.r2) : x = y := by
-  cases x
-  cases y
-  simp_all
 
 /-- The original continuous fractional feasible set, with no denominator restriction. -/
 def RealFeasible (x : RealOutcome) : Prop :=
@@ -147,7 +134,6 @@ theorem castOutcome_mechanism_eq_sideBenchmark (t0 t1 t2 : SixType) :
   rw [leftIndicator_eq_sideIndicator t0,
       leftIndicator_eq_sideIndicator t1,
       leftIndicator_eq_sideIndicator t2]
-  rfl
 
 /-- Every reachable benchmark row has zero `ab` mass and singleton mass 2/3. -/
 theorem sideBenchmark_row_shape (l0 l1 l2 : Bool) :
@@ -157,6 +143,13 @@ theorem sideBenchmark_row_shape (l0 l1 l2 : Bool) :
     x.r2.ab = 0 ∧ x.r2.a + x.r2.b = (2 : ℝ) / 3 := by
   cases l0 <;> cases l1 <;> cases l2 <;>
     norm_num [sideBenchmark, sideCount, sideIndicator, castRow, tableRow]
+
+/-- Every reachable benchmark row has total probability mass one. -/
+theorem sideBenchmark_row_mass (l0 l1 l2 : Bool) :
+    let x := sideBenchmark l0 l1 l2
+    x.r0.mass = 1 ∧ x.r1.mass = 1 ∧ x.r2.mass = 1 := by
+  cases l0 <;> cases l1 <;> cases l2 <;>
+    norm_num [RealRow.mass, sideBenchmark, sideCount, sideIndicator, castRow, tableRow]
 
 /--
 Weak SD dominance over a benchmark row with zero pair mass and singleton mass 2/3
@@ -197,14 +190,42 @@ theorem realSD_preferredSingleton_ge
     linarith
 
 /--
-For each of the eight possible L/R side profiles, feasibility together with fixed
-2/3 singleton mass and the three preferred-singleton lower bounds pins down the
-benchmark allocation uniquely. Only the finite side pattern is enumerated; the
-comparison allocation remains arbitrary over ℝ.
+With pair mass zero and nonempty mass fixed at 2/3, any strict SD improvement
+must strictly raise the singleton preferred by that agent's L/R class.
 -/
-theorem sideBenchmark_unique_from_preferred
+theorem strictSD_preferredSingleton_gt
+    (t : SixType) (y x : RealRow)
+    (hymass : y.mass = 1) (hxmass : x.mass = 1)
+    (hyab : y.ab = 0) (hxab : x.ab = 0)
+    (hynonempty : y.nonemptyMass = (2 : ℝ) / 3)
+    (hxsing : x.a + x.b = (2 : ℝ) / 3)
+    (hstrict : StrictAtSomeCutoff t y x) :
+    preferredSingleton (isLeft t) x < preferredSingleton (isLeft t) y := by
+  rcases hstrict with hs1 | hs2 | hs3
+  · cases t <;>
+      simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
+        RealRow.prob, first, second, third] at hs1 ⊢ <;>
+      linarith
+  · cases t <;>
+      simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
+        RealRow.prob, RealRow.nonemptyMass, first, second, third] at hs2 ⊢ <;>
+      linarith
+  · cases t <;>
+      simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
+        RealRow.prob, RealRow.mass, RealRow.nonemptyMass,
+        first, second, third] at hs3 ⊢ <;>
+      linarith
+
+/--
+For any of the eight L/R side patterns, capacities rule out a strict increase in
+one agent's preferred singleton when all three preferred-singleton coordinates
+are weakly above the benchmark and each row has singleton mass 2/3.
+-/
+theorem sideBenchmark_no_strict_preferred
     (l0 l1 l2 : Bool) (y : RealOutcome)
-    (hm0 : y.r0.mass = 1) (hm1 : y.r1.mass = 1) (hm2 : y.r2.mass = 1)
+    (h0a : 0 ≤ y.r0.a) (h0b : 0 ≤ y.r0.b)
+    (h1a : 0 ≤ y.r1.a) (h1b : 0 ≤ y.r1.b)
+    (h2a : 0 ≤ y.r2.a) (h2b : 0 ≤ y.r2.b)
     (hy0ab : y.r0.ab = 0) (hy1ab : y.r1.ab = 0) (hy2ab : y.r2.ab = 0)
     (hn0 : y.r0.nonemptyMass = (2 : ℝ) / 3)
     (hn1 : y.r1.nonemptyMass = (2 : ℝ) / 3)
@@ -215,37 +236,37 @@ theorem sideBenchmark_unique_from_preferred
     (hp1 : preferredSingleton l1 (sideBenchmark l0 l1 l2).r1 ≤
       preferredSingleton l1 y.r1)
     (hp2 : preferredSingleton l2 (sideBenchmark l0 l1 l2).r2 ≤
-      preferredSingleton l2 y.r2) :
-    y = sideBenchmark l0 l1 l2 := by
+      preferredSingleton l2 y.r2)
+    (hstrict :
+      preferredSingleton l0 (sideBenchmark l0 l1 l2).r0 < preferredSingleton l0 y.r0 ∨
+      preferredSingleton l1 (sideBenchmark l0 l1 l2).r1 < preferredSingleton l1 y.r1 ∨
+      preferredSingleton l2 (sideBenchmark l0 l1 l2).r2 < preferredSingleton l2 y.r2) : False := by
+  dsimp [RealOutcome.goodAMass, RealOutcome.goodBMass,
+    RealRow.nonemptyMass] at hcapA hcapB hn0 hn1 hn2
   cases l0 <;> cases l1 <;> cases l2 <;>
-    apply RealOutcome.ext_rows <;>
-    apply RealRow.ext_fields <;>
-    norm_num [RealRow.mass, RealRow.nonemptyMass,
-      RealOutcome.goodAMass, RealOutcome.goodBMass,
-      preferredSingleton, sideBenchmark, sideCount, sideIndicator,
-      castRow, tableRow] at * <;>
+    norm_num [preferredSingleton, sideBenchmark, sideCount, sideIndicator,
+      castRow, tableRow] at hp0 hp1 hp2 hstrict <;>
+    rcases hstrict with hs0 | hs1 | hs2 <;>
     linarith
 
 /--
-A stronger T1 statement: any continuously feasible allocation weakly SD-dominating
-the mechanism must equal the mechanism. This directly mirrors the analytic proof.
+T1 continuous OE theorem. The comparison outcome is arbitrary over ℝ; there is
+no candidate-set, denominator, deterministic-decomposition, or vertex restriction.
 -/
-theorem sixType_continuous_weakSD_unique
-    (t0 t1 t2 : SixType) (y : RealOutcome)
-    (hy : RealFeasible y)
-    (hSD0 : RealSDWeak t0 y.r0 (castOutcome (mechanism t0 t1 t2)).r0)
-    (hSD1 : RealSDWeak t1 y.r1 (castOutcome (mechanism t0 t1 t2)).r1)
-    (hSD2 : RealSDWeak t2 y.r2 (castOutcome (mechanism t0 t1 t2)).r2) :
-    y = castOutcome (mechanism t0 t1 t2) := by
+theorem sixType_continuous_ordinallyEfficient (t0 t1 t2 : SixType) :
+    ContinuousOrdinallyEfficientAt t0 t1 t2 := by
+  intro y hy himprove
+  rcases himprove with ⟨hSD0, hSD1, hSD2, hstrict⟩
   let l0 := isLeft t0
   let l1 := isLeft t1
   let l2 := isLeft t2
   let x := sideBenchmark l0 l1 l2
   have hcast : castOutcome (mechanism t0 t1 t2) = x := by
     simpa [l0, l1, l2, x] using castOutcome_mechanism_eq_sideBenchmark t0 t1 t2
-  rw [hcast] at hSD0 hSD1 hSD2
+  rw [hcast] at hSD0 hSD1 hSD2 hstrict
   rcases sideBenchmark_row_shape l0 l1 l2 with
     ⟨hx0ab, hx0sing, hx1ab, hx1sing, hx2ab, hx2sing⟩
+  rcases sideBenchmark_row_mass l0 l1 l2 with ⟨hx0mass, hx1mass, hx2mass⟩
   rcases hy with ⟨hy0, hy1, hy2, hm0, hm1, hm2, hcapA, hcapB⟩
   rcases hy0 with ⟨h0a, h0b, h0ab, h0e⟩
   rcases hy1 with ⟨h1a, h1b, h1ab, h1e⟩
@@ -281,21 +302,23 @@ theorem sixType_continuous_weakSD_unique
     simpa [l1] using realSD_preferredSingleton_ge t1 y.r1 x.r1 hy1ab hx1ab hSD1
   have hp2 : preferredSingleton l2 x.r2 ≤ preferredSingleton l2 y.r2 := by
     simpa [l2] using realSD_preferredSingleton_ge t2 y.r2 x.r2 hy2ab hx2ab hSD2
-  have hyx : y = x := by
-    simpa [x] using sideBenchmark_unique_from_preferred l0 l1 l2 y
-      hm0 hm1 hm2 hy0ab hy1ab hy2ab hn0 hn1 hn2 hcapA hcapB hp0 hp1 hp2
-  exact hyx.trans hcast.symm
-
-/--
-T1 continuous OE theorem. The comparison outcome is arbitrary over ℝ; there is
-no candidate-set, denominator, deterministic-decomposition, or vertex restriction.
--/
-theorem sixType_continuous_ordinallyEfficient (t0 t1 t2 : SixType) :
-    ContinuousOrdinallyEfficientAt t0 t1 t2 := by
-  intro y hy himprove
-  rcases himprove with ⟨hSD0, hSD1, hSD2, hstrict⟩
-  have hyx := sixType_continuous_weakSD_unique t0 t1 t2 y hy hSD0 hSD1 hSD2
-  rw [hyx] at hstrict
-  simp [StrictAtSomeCutoff] at hstrict
+  have hstrictPreferred :
+      preferredSingleton l0 x.r0 < preferredSingleton l0 y.r0 ∨
+      preferredSingleton l1 x.r1 < preferredSingleton l1 y.r1 ∨
+      preferredSingleton l2 x.r2 < preferredSingleton l2 y.r2 := by
+    rcases hstrict with hs0 | hs1 | hs2
+    · exact Or.inl (by
+        simpa [l0] using strictSD_preferredSingleton_gt t0 y.r0 x.r0
+          hm0 hx0mass hy0ab hx0ab hn0 hx0sing hs0)
+    · exact Or.inr (Or.inl (by
+        simpa [l1] using strictSD_preferredSingleton_gt t1 y.r1 x.r1
+          hm1 hx1mass hy1ab hx1ab hn1 hx1sing hs1))
+    · exact Or.inr (Or.inr (by
+        simpa [l2] using strictSD_preferredSingleton_gt t2 y.r2 x.r2
+          hm2 hx2mass hy2ab hx2ab hn2 hx2sing hs2))
+  exact sideBenchmark_no_strict_preferred l0 l1 l2 y
+    h0a h0b h1a h1b h2a h2b hy0ab hy1ab hy2ab hn0 hn1 hn2
+    hcapA hcapB (by simpa [x] using hp0) (by simpa [x] using hp1)
+    (by simpa [x] using hp2) (by simpa [x] using hstrictPreferred)
 
 end OEEFWSP
