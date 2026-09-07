@@ -128,10 +128,7 @@ theorem sixType_continuous_ordinallyEfficient (t0 t1 t2 : SixType) :
         norm_num [RealRow.mass, RealOutcome.goodAMass, RealOutcome.goodBMass,
           realCum1, realCum2, realCum3, RealRow.prob,
           castOutcome, castRow, mechanism, leftCount, leftIndicator, isLeft,
-          tableRow, first, second, third] at
-          hm0 hm1 hm2 hcapA hcapB
-          hw01 hw02 hw03 hw11 hw12 hw13 hw21 hw22 hw23
-          hs01 hs02 hs03 ⊢ <;>
+          tableRow, first, second, third] at * <;>
         linarith
   · rcases hs1 with hs11 | hs12 | hs13
     all_goals
@@ -139,10 +136,7 @@ theorem sixType_continuous_ordinallyEfficient (t0 t1 t2 : SixType) :
         norm_num [RealRow.mass, RealOutcome.goodAMass, RealOutcome.goodBMass,
           realCum1, realCum2, realCum3, RealRow.prob,
           castOutcome, castRow, mechanism, leftCount, leftIndicator, isLeft,
-          tableRow, first, second, third] at
-          hm0 hm1 hm2 hcapA hcapB
-          hw01 hw02 hw03 hw11 hw12 hw13 hw21 hw22 hw23
-          hs11 hs12 hs13 ⊢ <;>
+          tableRow, first, second, third] at * <;>
         linarith
   · rcases hs2 with hs21 | hs22 | hs23
     all_goals
@@ -150,10 +144,7 @@ theorem sixType_continuous_ordinallyEfficient (t0 t1 t2 : SixType) :
         norm_num [RealRow.mass, RealOutcome.goodAMass, RealOutcome.goodBMass,
           realCum1, realCum2, realCum3, RealRow.prob,
           castOutcome, castRow, mechanism, leftCount, leftIndicator, isLeft,
-          tableRow, first, second, third] at
-          hm0 hm1 hm2 hcapA hcapB
-          hw01 hw02 hw03 hw11 hw12 hw13 hw21 hw22 hw23
-          hs21 hs22 hs23 ⊢ <;>
+          tableRow, first, second, third] at * <;>
         linarith
 
 end OEEFWSP
