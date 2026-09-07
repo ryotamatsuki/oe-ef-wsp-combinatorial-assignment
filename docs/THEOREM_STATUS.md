@@ -34,41 +34,51 @@ Certificate facts: 13,122 EF cutoffs PASS, 17,496 deviations WSP PASS, minimum p
 
 **Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
 
+For `n=3`, `D_H_MIRROR = D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}` admits a closed-form repair of singleton PS satisfying feasibility, OE, EF, and WSP on all 1,000 ordered profiles.
+
+Certificate facts: 18,000 EF cutoffs PASS, 27,000 deviations WSP PASS, 8,328 equality deviations, minimum positive WSP margin `1/6`, maximum allocation denominator 6, exact 22-vertex continuous polytope, and positive SD-support weights with denominator at most 14. The mechanism is WSP but not full SD-SP. See `docs/BOUNDARY_ATTACK_H_MIRROR_RESULT.md`.
+
+## T6 — Two-sided pair-first P mirror crossing
+
+**Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
+
 For `n=3`, define
 
-`D_H_MIRROR = D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`
+`D_P_MIRROR = D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`
 
 with
 
-- `H_A: a > ab > empty > b`;
-- `H_B: b > ab > empty > a`.
+- `P_A: ab > a > empty > b`;
+- `P_B: ab > b > empty > a`.
 
-A closed-form repair of singleton PS satisfies feasibility, OE, EF, and WSP on all `10^3=1,000` ordered profiles.
+A symmetric closed-form repair of singleton PS satisfies feasibility, OE, EF, and WSP on all `10^3=1,000` ordered profiles.
 
-The mechanism changes singleton PS at exactly 12 ordered profiles: permutations of `(X,H_A,H_A)` and `(X,H_B,H_B)` for `X in {C,D}`.
+The mechanism changes singleton PS at exactly 26 ordered profiles: the 13 one-sided `P_A` repair profiles and their exact `a <-> b` mirrors on the `P_B` side. Profiles mixing `P_A` and `P_B` require no additional repair.
 
 Certificate facts:
 - 1,000 profiles;
 - 18,000 non-trivial EF cutoff inequalities: exact PASS;
 - 27,000 ordered unilateral deviations: exact WSP PASS;
-- 8,328 WSP equality deviations;
+- 8,376 WSP equality deviations;
 - minimum positive WSP margin: `1/6`;
 - maximum allocation denominator: 6;
 - the original continuous feasible polytope is reconstructed exactly from 14 facets and has 22 vertices;
-- every profile has a strictly positive rational SD-support vector with denominator at most 14;
-- minimum support weight: `1/14`.
+- every profile has a strictly positive rational SD-support vector with denominator at most 15;
+- minimum support weight: `1/15`.
 
-The mechanism is WSP but not full SD-strategy-proof; this distinction is explicitly regression-tested. See `docs/BOUNDARY_ATTACK_H_MIRROR_RESULT.md`, `src/boundary_h_mirror_certificate.py`, and `tests/test_boundary_h_mirror_certificate.py`.
+See `docs/BOUNDARY_ATTACK_P_MIRROR_RESULT.md`, `src/boundary_p_mirror_certificate.py`, and `tests/test_boundary_p_mirror_certificate.py`.
 
 ## Boundary implication
 
-T2 gives the clean analytic positive domain. T3 and T4 show that one-sided adjacent-swap outside-option crossing remains SAT. T5 shows that even two-sided H-type mirror crossing remains SAT.
+T2 gives the clean analytic positive domain. T3–T6 show that one-sided and two-sided adjacent-swap outside-option crossings of both H and pair-first P types remain compatible with OE+EF+WSP for three agents.
 
-The next frontier is the pair-first mirror domain
+The search now increases granularity instead of continuing indefinitely one mirror class at a time. The next target is the complete 16-type domain containing every strict ranking for which **at least one singleton is acceptable**:
 
-`D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`.
+`D16_ONE_SINGLETON_ACCEPTABLE = D8_ACCEPTABLE_SINGLETONS + {H_A,H_B,P_A,P_B,U_A,U_B,W_A,W_B}`.
 
-If that is also SAT, test the remaining one-singleton-unacceptable U/W mirror pairs before escalating to types with both singletons below the outside option.
+If D16 is SAT, investigate an analytic positive-domain theorem. If D16 is UNSAT, extract the smallest responsible subset and verify the impossibility with a complete continuous second formulation and an independent certificate.
+
+Only after this 16-type frontier is mapped should the search move to types with both singletons below the outside option.
 
 ## Invalidated result
 
