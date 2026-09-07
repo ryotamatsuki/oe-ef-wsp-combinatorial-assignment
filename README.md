@@ -62,13 +62,14 @@ A future candidate-face, MILP, SMT, or CEGIS implementation must pass `test_six_
 
 ## Lean formal verification
 
-A Lean 4 + Mathlib companion lives in `formal/lean/`. For the canonical three-agent six-type domain `D†={A,B,E,F,C,D}`, the Lean layer independently machine-checks, with exact rational arithmetic:
+A Lean 4 + Mathlib companion lives in `formal/lean/`. For the canonical three-agent six-type domain `D†={A,B,E,F,C,D}`, the Lean layer machine-checks:
 
 - fractional feasibility on all 216 ordered profiles;
 - bundle-level envy-freeness, corresponding to the 3,888 non-self SD cutoff inequalities;
-- full bundle-level SD-strategy-proofness, covering every profile, agent position, and six-type report (3,240 genuine unilateral misreports after removing truthful-report equality cases).
+- full bundle-level SD-strategy-proofness, covering every profile, agent position, and six-type report (3,240 genuine unilateral misreports after removing truthful-report equality cases);
+- continuous ordinal efficiency against the unrestricted real-valued fractional feasible set.
 
-The continuous ordinal-efficiency argument is deliberately **not yet claimed as Lean-certified**. Its current authority remains the analytic proof against the unrestricted continuous fractional feasible set in `theory/six_type_explicit_mechanism.md`. See `formal/lean/CROSSWALK.md` for the exact source-to-theorem mapping and the conditions required before T1 can be called fully Lean-certified.
+The continuous OE theorem is `sixType_continuous_ordinallyEfficient`. It quantifies over arbitrary real-valued feasible comparison outcomes and introduces no denominator restriction, candidate-set restriction, vertex restriction, or deterministic-decomposition restriction. Together with the finite exact theorems, this makes T1 fully Lean-certified. See `formal/lean/CROSSWALK.md` for the exact source-to-theorem mapping.
 
 The workflow `.github/workflows/lean.yml` runs the formal build in GitHub Actions, so a local Lean installation is not required for routine verification.
 
