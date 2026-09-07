@@ -12,8 +12,8 @@ This file prevents a green Lean build from being mistaken for a proof of a diffe
 | `theory/six_type_explicit_mechanism.md` | Fractional feasibility | `sixType_feasible` | LEAN-CERTIFIED |
 | `theory/six_type_explicit_mechanism.md` | Envy-freeness under bundle-level SD | `sixType_envyFree` | LEAN-CERTIFIED |
 | `theory/six_type_explicit_mechanism.md` | Full bundle-level SD-strategy-proofness | `sixType_fullSDStrategyProof` | LEAN-CERTIFIED |
-| `theory/six_type_explicit_mechanism.md` | Ordinal efficiency against the full continuous fractional feasible set | — | NOT YET LEAN-CERTIFIED |
-| `docs/THEOREM_STATUS.md` T1 | Combined OE+EF+full SD-SP existence theorem | — | PARTIALLY LEAN-CERTIFIED; OE REMAINS ANALYTIC |
+| `theory/six_type_explicit_mechanism.md` | Ordinal efficiency against the full continuous fractional feasible set | `sixType_continuous_ordinallyEfficient` | LEAN-CERTIFIED |
+| `docs/THEOREM_STATUS.md` T1 | Combined OE+EF+full SD-SP existence theorem | `sixType_feasible`, `sixType_envyFree`, `sixType_fullSDStrategyProof`, `sixType_continuous_ordinallyEfficient` | FULLY LEAN-CERTIFIED |
 
 ## Exact counting correspondence
 
@@ -22,11 +22,12 @@ For each of the `6^3 = 216` ordered profiles:
 - EF checks 3 agents × 2 other agents × 3 non-trivial SD cutoffs, giving `216 × 18 = 3,888` exact cutoff inequalities.
 - Full SD-SP checks 3 agent positions × 6 possible reports. The Lean theorem includes the truthful report as a weak-dominance equality case. Removing the truthful report leaves `216 × 3 × 5 = 3,240` genuine unilateral deviations, matching the canonical Python count.
 
-## Required audit before upgrading theorem status
+## Continuous OE scope
 
-Do not mark T1 as fully Lean-certified until all of the following are true:
+The Lean theorem `sixType_continuous_ordinallyEfficient` quantifies over arbitrary real-valued comparison outcomes in the original continuous fractional feasible set. The formalization introduces no denominator restriction, candidate-set restriction, vertex restriction, or deterministic-decomposition restriction.
 
-1. arbitrary feasible comparison outcomes are modeled over `ℝ` (or an exactly justified equivalent domain);
-2. the manuscript's bundle-SD Pareto-improvement definition is represented without denominator or candidate-set restrictions;
-3. the continuous OE proof is accepted by Lean with no `sorry`/axiom placeholder introduced for the substantive step;
-4. this crosswalk is updated to point to the exact OE theorem declaration.
+The comparison allocation is modeled over `ℝ`, bundle-level SD Pareto improvement is represented directly, and the substantive OE proof is accepted by Lean without `sorry` or an added axiom placeholder.
+
+## T1 certification status
+
+T1 is fully Lean-certified for the canonical six-type domain. The machine-checked layer covers fractional feasibility, bundle-level EF, full bundle-level SD-strategy-proofness, and ordinal efficiency against the unrestricted continuous fractional feasible set.
