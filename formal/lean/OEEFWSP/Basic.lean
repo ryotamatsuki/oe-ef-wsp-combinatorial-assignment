@@ -66,4 +66,9 @@ def Feasible (x : Outcome) : Prop :=
   x.goodAMass ≤ 1 ∧
   x.goodBMass ≤ 1
 
+/-- Explicit decidability used by the exact finite checker. -/
+instance feasibleDecidable (x : Outcome) : Decidable (Feasible x) := by
+  unfold Feasible Row.Nonnegative
+  infer_instance
+
 end OEEFWSP
