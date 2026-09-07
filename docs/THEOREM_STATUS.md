@@ -34,7 +34,7 @@ The proof in `theory/arbitrary_n_two_goods.md` is fully analytic and works again
 
 For `n=3`, define
 
-`D_BOUNDARY_1 = D8_ACCEPTABLE_SINGLETONS + {H_A}`
+`D_H = D8_ACCEPTABLE_SINGLETONS + {H_A}`
 
 with `H_A: a > ab > empty > b`.
 
@@ -47,22 +47,53 @@ Certificate facts:
 - 5,970 deviations use the WSP equality branch;
 - minimum positive WSP margin among non-equality deviations: `1/1000`;
 - maximum allocation denominator: 12,000;
-- every allocation is supported as OE by strictly positive bundle-SD criterion weights; the support check was independently rationalized and verified against all 22 vertices of the original fractional feasible polytope;
-- an independent continuous LP self-attack finds no positive SD-Pareto improvement.
+- every allocation is supported as OE by strictly positive bundle-SD criterion weights and checked against all 22 vertices of the original fractional feasible polytope.
 
-The mechanism is stored in `src/boundary1_certificate.py`. It equals singleton-PS on 693 profiles and uses 36 exact rational exception allocations to repair the local OE/WSP conflict network around `C` and `H_A`.
+Consequently, adding a single `H_A` type does **not** generate impossibility.
 
-Consequently, adding a single `H_A` type does **not** generate impossibility. The one-singleton-unacceptable boundary must be pushed further.
+## T4 — Pair-first minimal outside-option crossing extension
+
+**Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
+
+For `n=3`, define
+
+`D_PA = D8_ACCEPTABLE_SINGLETONS + {P_A}`
+
+with `P_A: ab > a > empty > b`.
+
+A closed-form repair of singleton PS exists satisfying feasibility, OE, EF, and WSP on all 729 ordered profiles.
+
+The mechanism differs from singleton PS at only 13 profiles: the permutations of `(X,P_A,P_A)` for `X in {A,E,C,J}` and `(P_A,P_A,P_A)`.
+
+Certificate facts:
+- 729 profiles;
+- 13,122 non-trivial EF cutoff inequalities: exact PASS;
+- 17,496 ordered unilateral deviations: exact WSP PASS;
+- 6,204 WSP equality deviations;
+- minimum positive WSP margin: `1/6`;
+- maximum allocation denominator: 6;
+- the original continuous feasible polytope is reconstructed exactly from 14 facets and has 22 vertices;
+- every profile has a strictly positive rational SD-support vector with denominator at most 15;
+- minimum support weight: `1/15`;
+- OE support verification is exact rational arithmetic and does not rely on candidate-face completeness or floating LP output.
+
+The certificate is implemented in `src/boundary2_pa_certificate.py` and tested in `tests/test_boundary2_pa_certificate.py`.
+
+Consequently, the pair-first one-singleton-unacceptable type `P_A` alone is also not an impossibility core.
 
 ## Boundary implication
 
-T2 identifies the clean analytic positive domain. T3 shows that crossing that boundary by the adjacent-swap type `H_A` alone is still compatible with OE+EF+WSP for three agents.
+T2 identifies the clean analytic positive domain. T3 and T4 show that crossing that boundary in one direction by either adjacent-swap type `H_A` or `P_A` still permits OE+EF+WSP for three agents.
 
-The next candidate is the pair-first one-singleton-unacceptable type
+The next frontier is **two-sided outside-option crossing**, beginning with the mirror-pair domain
 
-`P_A: ab > a > empty > b`,
+`D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`,
 
-followed, if SAT, by mirror-pair extensions such as `{H_A,H_B}` and `{P_A,P_B}`.
+followed, if SAT, by
+
+`D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`.
+
+Only after the one-singleton-unacceptable mirror-pair frontier is mapped should the search move to types with both singletons below the outside option.
 
 ## Invalidated result
 
