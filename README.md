@@ -4,13 +4,15 @@
 >
 > **VERIFIED POSITIVE BOUNDARY THEOREM:** for every `n>=2`, two unit-supply goods, and every strict bundle ranking satisfying `a>empty` and `b>empty`, an explicit fractional mechanism satisfies ordinal efficiency (OE), envy-freeness (EF), and **full bundle-level SD-strategy-proofness** (hence WSP).
 >
+> **VERIFIED ONE-SIDED BOUNDARY SAT:** for three agents, both minimal adjacent-swap extensions `D_acc+{H_A}` and `D_acc+{P_A}` admit exact OE+EF+WSP mechanisms. A single one-direction outside-option crossing is therefore not an impossibility core.
+>
 > **INVALIDATED COMPUTATIONAL RESULT:** a historical candidate-face computation reported INFEASIBLE on the six-type domain even at `delta=1/1000`. That result is false because an explicit witness exists. The legacy implementation was not preserved, so its line-level root cause cannot currently be reconstructed.
 
 ## Research question
 
 Can ordinal efficiency, envy-freeness, and weak strategy-proofness coexist in random assignment with strict ordinal preferences over bundles?
 
-The unrestricted problem remains open. The positive theorem below identifies a restricted-domain boundary; it does not solve the unrestricted problem.
+The unrestricted problem remains open. The positive theorem and finite-domain certificates below map a verified possibility frontier; they do not solve the unrestricted problem.
 
 ## Positive theorem
 
@@ -30,11 +32,18 @@ The closed-form rule gives every agent:
 
 `theory/arbitrary_n_two_goods.md` proves analytically, for every `n>=2`, that this rule is feasible, OE against the original continuous fractional feasible set, EF, and full bundle-level SD-strategy-proof.
 
-The earlier three-agent six-type and eight-type acceptable-singletons results are special cases/corollaries of this architecture.
+## Current boundary map for n=3
 
-## Boundary for the next search
+Two minimal one-singleton-unacceptable adjacent-swap types have now been closed positively:
 
-The theorem stops applying as soon as at least one singleton is ranked below the outside option. Negative-search work therefore starts with **one-singleton-unacceptable** types before moving to types where both singletons are unacceptable.
+- `H_A: a > ab > empty > b` — exact finite-domain SAT certificate;
+- `P_A: ab > a > empty > b` — exact finite-domain SAT certificate.
+
+For `P_A`, singleton PS already satisfies feasibility, EF, and WSP on all 729 profiles; only 13 profiles require a closed-form OE repair. The final exact mechanism has maximum allocation denominator 6 and minimum positive WSP margin `1/6`. OE is certified by exact enumeration of the 22 vertices of the original continuous feasible polytope and strictly positive rational SD-support weights with denominator at most 15.
+
+The next target is **two-sided outside-option crossing**:
+
+`D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`.
 
 See `docs/BOUNDARY_SEARCH_PLAN.md`.
 
