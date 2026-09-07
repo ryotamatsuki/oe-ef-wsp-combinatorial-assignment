@@ -1,0 +1,11 @@
+{
+  "profiles": 216,
+  "ef_nontrivial_cutoffs": 3888,
+  "ordered_unilateral_deviations": 3240,
+  "exact_feasibility": "PASS",
+  "exact_envy_freeness": "PASS",
+  "exact_full_sd_strategyproofness": "PASS",
+  "analytic_ordinal_efficiency": "PASS",
+  "oe_lp_self_attack_max_gain": 8.881784197001252e-16,
+  "oe_lp_role": "numerical corroboration only"
+}
