@@ -4,7 +4,7 @@
 >
 > **VERIFIED POSITIVE BOUNDARY THEOREM:** for every `n>=2`, two unit-supply goods, and every strict bundle ranking satisfying `a>empty` and `b>empty`, an explicit fractional mechanism satisfies ordinal efficiency (OE), envy-freeness (EF), and **full bundle-level SD-strategy-proofness** (hence WSP).
 >
-> **VERIFIED ONE-SIDED BOUNDARY SAT:** for three agents, both minimal adjacent-swap extensions `D_acc+{H_A}` and `D_acc+{P_A}` admit exact OE+EF+WSP mechanisms. A single one-direction outside-option crossing is therefore not an impossibility core.
+> **VERIFIED COMPLETE 16-TYPE FRONTIER SAT (n=3):** when the domain contains **every** strict ranking for which at least one singleton is above the outside option, an explicit fractional mechanism satisfies OE+EF+WSP on all 4,096 ordered profiles.
 >
 > **INVALIDATED COMPUTATIONAL RESULT:** a historical candidate-face computation reported INFEASIBLE on the six-type domain even at `delta=1/1000`. That result is false because an explicit witness exists. The legacy implementation was not preserved, so its line-level root cause cannot currently be reconstructed.
 
@@ -14,36 +14,45 @@ Can ordinal efficiency, envy-freeness, and weak strategy-proofness coexist in ra
 
 The unrestricted problem remains open. The positive theorem and finite-domain certificates below map a verified possibility frontier; they do not solve the unrestricted problem.
 
-## Positive theorem
+## Arbitrary-n positive theorem
 
 For bundles `(a,b,ab,empty)`, assume every admissible strict ranking satisfies
 
 - `a > empty`, and
 - `b > empty`.
 
-Classify a report as L if `a>b` and R if `b>a`. Let `k` be the number of L-reports and let `h=2/n`.
+The closed-form rule in `theory/arbitrary_n_two_goods.md` is analytically proved, for every `n>=2`, to be feasible, OE against the original continuous fractional feasible set, EF, and full bundle-level SD-strategy-proof.
 
-The closed-form rule gives every agent:
+## Complete n=3 positive frontier
 
-- zero probability of `ab`;
-- total singleton probability `h`;
-- outside probability `1-h`;
-- the two-singleton eating allocation determined by `k`.
+For three agents, the positive region extends strictly beyond the arbitrary-n theorem. Define
 
-`theory/arbitrary_n_two_goods.md` proves analytically, for every `n>=2`, that this rule is feasible, OE against the original continuous fractional feasible set, EF, and full bundle-level SD-strategy-proof.
+`D16_ONE_SINGLETON_ACCEPTABLE`
 
-## Current boundary map for n=3
+as all 16 strict rankings in which at least one singleton is above the outside option.
 
-Two minimal one-singleton-unacceptable adjacent-swap types have now been closed positively:
+The mechanism in `src/boundary16_certificate.py` satisfies:
 
-- `H_A: a > ab > empty > b` — exact finite-domain SAT certificate;
-- `P_A: ab > a > empty > b` — exact finite-domain SAT certificate.
+- 4,096 ordered profiles;
+- 73,728 non-trivial EF cutoff inequalities: exact PASS;
+- 184,320 ordered unilateral deviations: exact WSP PASS;
+- 44,400 WSP equality deviations;
+- minimum positive WSP margin `1/6`;
+- maximum allocation denominator 6;
+- continuous OE certified against the exact 22-vertex feasible polytope with strictly positive rational SD-support weights.
 
-For `P_A`, singleton PS already satisfies feasibility, EF, and WSP on all 729 profiles; only 13 profiles require a closed-form OE repair. The final exact mechanism has maximum allocation denominator 6 and minimum positive WSP margin `1/6`. OE is certified by exact enumeration of the 22 vertices of the original continuous feasible polytope and strictly positive rational SD-support weights with denominator at most 15.
+See `docs/BOUNDARY_ATTACK_D16_RESULT.md`.
 
-The next target is **two-sided outside-option crossing**:
+## Current frontier
 
-`D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`.
+The one-singleton-unacceptable region is now completely SAT for `n=3,m=2`. The next negative-search domain adds types with **both** singletons below the outside option, beginning with
+
+- `T_A: ab > empty > a > b`;
+- `T_B: ab > empty > b > a`.
+
+The next target is
+
+`D18_T_MIRROR = D16_ONE_SINGLETON_ACCEPTABLE + {T_A,T_B}`.
 
 See `docs/BOUNDARY_SEARCH_PLAN.md`.
 
