@@ -2,11 +2,11 @@
 
 ## T1 — Six-type explicit existence theorem
 
-**Status: VERIFIED RESTRICTED-DOMAIN THEOREM.**
+**Status: VERIFIED RESTRICTED-DOMAIN THEOREM / FULLY LEAN-CERTIFIED.**
 
 Domain `D†={A,B,E,F,C,D}` with full strict rankings as defined in `src/preferences.py`. For three agents and two unit-supply goods, the explicit rule in `theory/six_type_explicit_mechanism.md` satisfies fractional feasibility, OE, EF, and full bundle-level SD-strategy-proofness.
 
-Evidence: 216 profiles, 3,888 non-trivial EF cutoff inequalities, 3,240 unilateral deviations, analytic OE proof over the full continuous fractional feasible set, and independent numerical self-attack.
+Evidence: 216 profiles, 3,888 non-trivial EF cutoff inequalities, 3,240 unilateral deviations, independent numerical self-attack, and Lean kernel verification of feasibility, EF, full bundle-level SD-strategy-proofness, and continuous OE. The Lean OE theorem quantifies over arbitrary real-valued feasible comparison outcomes and introduces no denominator, candidate-set, vertex, or deterministic-decomposition restriction.
 
 ## T2 — Arbitrary-n, two-good acceptable-singletons existence theorem
 
