@@ -2,89 +2,61 @@
 
 ## Purpose
 
-The arbitrary-n theorem proves existence on the full strict-ranking domain satisfying
+The arbitrary-n theorem proves existence on the full strict-ranking domain satisfying `a > empty` and `b > empty`.
 
-`a > empty` and `b > empty`.
+With four bundles there are 24 strict rankings:
 
-With four bundles there are 24 strict rankings. They partition exactly into:
+- 8 with both singletons acceptable;
+- 8 with exactly one singleton unacceptable;
+- 8 with both singletons unacceptable.
 
-- 8 rankings where both singletons are acceptable;
-- 8 rankings where exactly one singleton is unacceptable;
-- 8 rankings where both singletons are unacceptable.
+The search therefore crosses the positive boundary minimally before adding stronger outside-option crossings.
 
-Therefore the mathematically minimal way to leave the positive theorem's domain is to add one of the eight one-singleton-unacceptable types.
+## One-singleton-unacceptable mirror classes
 
-## Canonical one-singleton-unacceptable mirror classes
+Up to swapping goods:
 
-Up to swapping goods `a` and `b`, there are four classes:
+1. `H_A: a > ab > empty > b` / `H_B`;
+2. `P_A: ab > a > empty > b` / `P_B`;
+3. `U_A: a > empty > ab > b` / `U_B`;
+4. `W_A: a > empty > b > ab` / `W_B`.
 
-1. `H_A: a > ab > empty > b`  (mirror `H_B`)
-2. `P_A: ab > a > empty > b`  (mirror `P_B`)
-3. `U_A: a > empty > ab > b`  (mirror `U_B`)
-4. `W_A: a > empty > b > ab`  (mirror `W_B`)
+## Completed attacks
 
-## Completed one-sided boundary attacks
+- `D_acc + {H_A}`: **SAT**. See `docs/BOUNDARY_ATTACK_1_RESULT.md`.
+- `D_acc + {P_A}`: **SAT**. See `docs/BOUNDARY_ATTACK_PA_RESULT.md`.
+- `D_acc + {H_A,H_B}`: **SAT**. See `docs/BOUNDARY_ATTACK_H_MIRROR_RESULT.md`.
 
-### `D_acc + {H_A}`
+The H mirror-pair certificate covers 1,000 ordered profiles and 27,000 unilateral deviations exactly. It is WSP but not full SD-SP, confirming that the search must preserve the exact WSP axiom rather than strengthen it.
 
-**SAT.** Exact finite-domain certificate in `docs/BOUNDARY_ATTACK_1_RESULT.md`.
+## Current stage — pair-first mirror crossing
 
-### `D_acc + {P_A}`
+Next attack:
 
-**SAT.** Exact finite-domain certificate in `docs/BOUNDARY_ATTACK_PA_RESULT.md`.
+`D_P_MIRROR = D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`.
 
-The `P_A` mechanism is especially simple: singleton PS is already feasible, EF, and WSP on all 729 profiles and fails OE only at 13 profiles. A closed-form 13-profile repair gives an exact OE+EF+WSP mechanism with maximum allocation denominator 6 and minimum positive WSP margin `1/6`.
+This is the highest-value remaining adjacent-swap mirror domain because both new types rank `ab` first and one singleton below the outside option. It places the strongest pair-demand pressure on both goods simultaneously while remaining one-singleton-unacceptable.
 
-These results rule out the hypothesis that a single adjacent-swap outside-option crossing is enough for impossibility.
+If `D_P_MIRROR` is SAT:
 
-## Next stage — mirror-pair crossing
+1. test `D_acc + {U_A,U_B}`;
+2. test `D_acc + {W_A,W_B}`;
+3. then escalate to both-singletons-unacceptable types.
 
-The next frontier is to allow one-singleton-unacceptable reports in both good directions.
-
-Attack in this order:
-
-1. `D_acc + {H_A,H_B}`;
-2. if SAT, `D_acc + {P_A,P_B}`;
-3. if both SAT, test analogous U/W mirror pairs;
-4. only then move to types with both singletons unacceptable.
-
-The mirror-pair step is not redundant with the one-sided result. A mechanism may accommodate one unacceptable direction but fail once WSP links force compatible choices across both `a`- and `b`-oriented crossing types.
-
-## Anchor profiles
-
-### All `H_A`
-
-EF forces equal rows. OE requires `q=0` and full use of the a-capacity:
-
-`p+r=1/n`, `z=1-1/n`.
-
-The split between `p` and `r` is generally not fixed.
-
-### All `P_A`
-
-EF forces equal rows. OE uniquely gives
-
-`(p,q,r,z)=(0,0,1/n,1-1/n)`.
-
-The mirror statements hold for `H_B` and `P_B` after swapping goods.
+If `D_P_MIRROR` produces an UNSAT candidate, do not treat fixed-grid or incomplete-face infeasibility as proof. Require a complete continuous formulation and an independent exact certificate.
 
 ## Later stage — both singletons unacceptable
 
-If the one-singleton-unacceptable mirror-pair frontier remains SAT, add
+Candidate pair:
 
-`T_A: ab > empty > a > b`,
+- `T_A: ab > empty > a > b`;
+- `T_B: ab > empty > b > a`.
 
-`T_B: ab > empty > b > a`.
-
-At an all-`T_A` or all-`T_B` profile, OE+EF uniquely forces
-
-`(p,q,r,z)=(0,0,1/n,1-1/n)`.
+At an all-`T_A` or all-`T_B` profile, OE+EF uniquely forces `(p,q,r,z)=(0,0,1/n,1-1/n)`.
 
 ## Solver rule
 
-Passing the known-good six-type fixture proves only that a solver does not reject that known solution. It does not establish completeness on a new domain.
-
-For every boundary domain:
+For every new boundary domain:
 
 1. rebuild OE from the original continuous fractional feasible set and bundle-level SD;
 2. do not import a domain-specific OE characterization from an earlier domain;
@@ -94,4 +66,4 @@ For every boundary domain:
 
 ## Current next domain
 
-`D_MIRROR_H = D8_ACCEPTABLE_SINGLETONS + {H_A,H_B}`.
+`D_P_MIRROR = D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`.
