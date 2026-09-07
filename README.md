@@ -2,58 +2,45 @@
 
 > **GENERAL OPEN PROBLEM: UNRESOLVED**
 >
-> **VERIFIED RESTRICTED-DOMAIN RESULT:** for three agents, two unit-supply goods, and the six-type domain
-> \(D^\dagger=\{A,B,E,F,C,D\}\), an explicit fractional mechanism satisfies ordinal efficiency (OE),
-> envy-freeness (EF), and **full bundle-level SD-strategy-proofness** (hence WSP).
+> **VERIFIED POSITIVE BOUNDARY THEOREM:** for every `n>=2`, two unit-supply goods, and every strict bundle ranking satisfying `a>empty` and `b>empty`, an explicit fractional mechanism satisfies ordinal efficiency (OE), envy-freeness (EF), and **full bundle-level SD-strategy-proofness** (hence WSP).
 >
-> **INVALIDATED COMPUTATIONAL RESULT:** a historical candidate-face computation reported
-> INFEASIBLE on the same six-type domain even at \(\delta=1/1000\).  That result is false because
-> the explicit witness below exists.  The legacy implementation was not preserved, so its line-level
-> root cause cannot currently be reconstructed.  No negative search should rely on that result.
+> **INVALIDATED COMPUTATIONAL RESULT:** a historical candidate-face computation reported INFEASIBLE on the six-type domain even at `delta=1/1000`. That result is false because an explicit witness exists. The legacy implementation was not preserved, so its line-level root cause cannot currently be reconstructed.
 
 ## Research question
 
-Can ordinal efficiency, envy-freeness, and weak strategy-proofness coexist in random assignment
-with strict ordinal preferences over bundles?
+Can ordinal efficiency, envy-freeness, and weak strategy-proofness coexist in random assignment with strict ordinal preferences over bundles?
 
-The unrestricted problem remains open in this repository.  Restricted-domain existence results are
-kept separate from the general claim.
+The unrestricted problem remains open. The positive theorem below identifies a restricted-domain boundary; it does not solve the unrestricted problem.
 
-## Canonical baseline
+## Positive theorem
 
-For bundles `(a,b,ab,empty)`, define
+For bundles `(a,b,ab,empty)`, assume every admissible strict ranking satisfies
 
-- `L = {A,E,C}` and `R = {B,F,D}`;
-- `k` = number of reported L-types.
+- `a > empty`, and
+- `b > empty`.
 
-The explicit mechanism is
+Classify a report as L if `a>b` and R if `b>a`. Let `k` be the number of L-reports and let `h=2/n`.
 
-| k | each L-type receives | each R-type receives |
-|---:|---|---|
-| 0 | — | `(1/3,1/3,0,1/3)` |
-| 1 | `(2/3,0,0,1/3)` | `(1/6,1/2,0,1/3)` |
-| 2 | `(1/2,1/6,0,1/3)` | `(0,2/3,0,1/3)` |
-| 3 | `(1/3,1/3,0,1/3)` | — |
+The closed-form rule gives every agent:
 
-The exact regression suite checks all 216 ordered six-type profiles, 3,888 non-trivial EF cutoff
-comparisons, and 3,240 ordered unilateral deviations.
+- zero probability of `ab`;
+- total singleton probability `h`;
+- outside probability `1-h`;
+- the two-singleton eating allocation determined by `k`.
 
-## Status summary
+`theory/arbitrary_n_two_goods.md` proves analytically, for every `n>=2`, that this rule is feasible, OE against the original continuous fractional feasible set, EF, and full bundle-level SD-strategy-proof.
 
-- Six-type explicit mechanism: **exactly verified** for feasibility, EF, and full SD-SP; OE has an
-  analytic proof plus an independent continuous LP self-attack.
-- Acceptable-singletons eight-type extension: **exactly verified computationally** for feasibility,
-  EF, and full SD-SP on 512 ordered profiles; OE has the same analytic architecture and a continuous
-  LP self-attack.  A standalone paper theorem is not yet frozen.
-- Arbitrary `n`, two-good extension: **conjecture/scaffold only**; exact finite tests currently cover
-  `n=2,...,10` for feasibility, EF, and full SD-SP.
-- Historical six-type candidate-face INFEASIBLE: **invalidated** and archived.
+The earlier three-agent six-type and eight-type acceptable-singletons results are special cases/corollaries of this architecture.
 
-## Guardrail
+## Boundary for the next search
 
-A future candidate-face, MILP, SMT, or CEGIS implementation must pass
-`test_six_type_explicit_mechanism_is_accepted_by_solver` before it may be used for impossibility
-searches.
+The theorem stops applying as soon as at least one singleton is ranked below the outside option. Negative-search work therefore starts with **one-singleton-unacceptable** types before moving to types where both singletons are unacceptable.
+
+See `docs/BOUNDARY_SEARCH_PLAN.md`.
+
+## Regression guardrail
+
+A future candidate-face, MILP, SMT, or CEGIS implementation must pass `test_six_type_explicit_mechanism_is_accepted_by_solver` before it may be used for impossibility searches. Passing that fixture prevents a known false negative; it does not by itself prove solver completeness on new preference domains.
 
 ## Run
 
