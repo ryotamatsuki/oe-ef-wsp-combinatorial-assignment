@@ -92,6 +92,11 @@ def SDWeak (t : SixType) (x y : Row) : Prop :=
   cum2 t x ≥ cum2 t y ∧
   cum3 t x ≥ cum3 t y
 
+/-- Explicit decidability used by the exact finite SD checker. -/
+instance sdWeakDecidable (t : SixType) (x y : Row) : Decidable (SDWeak t x y) := by
+  unfold SDWeak
+  infer_instance
+
 /-- Exact envy-freeness at an ordered three-agent profile (self-comparisons omitted). -/
 def EnvyFreeAt (t0 t1 t2 : SixType) : Prop :=
   let x := mechanism t0 t1 t2
@@ -101,6 +106,10 @@ def EnvyFreeAt (t0 t1 t2 : SixType) : Prop :=
   SDWeak t1 x.r1 x.r2 ∧
   SDWeak t2 x.r2 x.r0 ∧
   SDWeak t2 x.r2 x.r1
+
+instance envyFreeAtDecidable (t0 t1 t2 : SixType) : Decidable (EnvyFreeAt t0 t1 t2) := by
+  unfold EnvyFreeAt
+  infer_instance
 
 /-- Truthful row for agent 0 weakly SD-dominates its row after a report change. -/
 def TruthDominatesDeviation0 (t0 t1 t2 mis : SixType) : Prop :=
@@ -114,6 +123,21 @@ def TruthDominatesDeviation1 (t0 t1 t2 mis : SixType) : Prop :=
 def TruthDominatesDeviation2 (t0 t1 t2 mis : SixType) : Prop :=
   SDWeak t2 (mechanism t0 t1 t2).r2 (mechanism t0 t1 mis).r2
 
+instance truthDominatesDeviation0Decidable (t0 t1 t2 mis : SixType) :
+    Decidable (TruthDominatesDeviation0 t0 t1 t2 mis) := by
+  unfold TruthDominatesDeviation0
+  infer_instance
+
+instance truthDominatesDeviation1Decidable (t0 t1 t2 mis : SixType) :
+    Decidable (TruthDominatesDeviation1 t0 t1 t2 mis) := by
+  unfold TruthDominatesDeviation1
+  infer_instance
+
+instance truthDominatesDeviation2Decidable (t0 t1 t2 mis : SixType) :
+    Decidable (TruthDominatesDeviation2 t0 t1 t2 mis) := by
+  unfold TruthDominatesDeviation2
+  infer_instance
+
 /--
 A single universally quantified report variable checks all three agent positions.
 Since `mis` is arbitrary, this is full bundle-level SD-strategy-proofness.
@@ -122,6 +146,11 @@ def FullSDStrategyProofAgainst (t0 t1 t2 mis : SixType) : Prop :=
   TruthDominatesDeviation0 t0 t1 t2 mis ∧
   TruthDominatesDeviation1 t0 t1 t2 mis ∧
   TruthDominatesDeviation2 t0 t1 t2 mis
+
+instance fullSDStrategyProofAgainstDecidable (t0 t1 t2 mis : SixType) :
+    Decidable (FullSDStrategyProofAgainst t0 t1 t2 mis) := by
+  unfold FullSDStrategyProofAgainst
+  infer_instance
 
 /-- Every reachable table row is fractionally feasible at every one of the 216 ordered profiles. -/
 theorem sixType_feasible (t0 t1 t2 : SixType) :
