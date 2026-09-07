@@ -26,19 +26,43 @@ there exists an explicit fractional mechanism satisfying feasibility, OE, EF, an
 
 The rule gives every agent total nonempty probability `2/n`, zero probability of `ab`, outside probability `1-2/n`, and uses a closed-form two-singleton eating allocation based only on whether the report has `a>b` or `b>a`.
 
-The proof in `theory/arbitrary_n_two_goods.md` is fully analytic:
-- feasibility is checked in all `k=#L` regimes;
-- bundle-level EF follows from the complete cumulative-cutoff forms;
-- full SD-SP follows from direct cross-class report inequalities;
-- OE is proved against the original continuous fractional feasible set, not a candidate face or grid.
+The proof in `theory/arbitrary_n_two_goods.md` is fully analytic and works against the original continuous fractional feasible set.
 
-The earlier three-agent eight-type acceptable-singletons result is a corollary of T2 and no longer has a separate pending analytic status.
+## T3 — First minimal outside-option crossing extension
+
+**Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
+
+For `n=3`, define
+
+`D_BOUNDARY_1 = D8_ACCEPTABLE_SINGLETONS + {H_A}`
+
+with `H_A: a > ab > empty > b`.
+
+An exact rational mechanism exists satisfying feasibility, OE, EF, and WSP on all `9^3=729` ordered profiles.
+
+Certificate facts:
+- 729 profiles;
+- 13,122 non-trivial EF cutoff inequalities: exact PASS;
+- 17,496 ordered unilateral deviations: exact WSP PASS;
+- 5,970 deviations use the WSP equality branch;
+- minimum positive WSP margin among non-equality deviations: `1/1000`;
+- maximum allocation denominator: 12,000;
+- every allocation is supported as OE by strictly positive bundle-SD criterion weights; the support check was independently rationalized and verified against all 22 vertices of the original fractional feasible polytope;
+- an independent continuous LP self-attack finds no positive SD-Pareto improvement.
+
+The mechanism is stored in `src/boundary1_certificate.py`. It equals singleton-PS on 693 profiles and uses 36 exact rational exception allocations to repair the local OE/WSP conflict network around `C` and `H_A`.
+
+Consequently, adding a single `H_A` type does **not** generate impossibility. The one-singleton-unacceptable boundary must be pushed further.
 
 ## Boundary implication
 
-T2 identifies a precise applicability boundary: the proof requires both singletons to be ranked above the outside option. It does **not** cover any type with `empty > a` or `empty > b`.
+T2 identifies the clean analytic positive domain. T3 shows that crossing that boundary by the adjacent-swap type `H_A` alone is still compatible with OE+EF+WSP for three agents.
 
-The next search therefore begins with minimal one-singleton-unacceptable extensions before adding types with both singletons unacceptable.
+The next candidate is the pair-first one-singleton-unacceptable type
+
+`P_A: ab > a > empty > b`,
+
+followed, if SAT, by mirror-pair extensions such as `{H_A,H_B}` and `{P_A,P_B}`.
 
 ## Invalidated result
 
