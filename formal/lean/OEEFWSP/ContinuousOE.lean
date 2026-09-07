@@ -30,6 +30,13 @@ def Nonnegative (x : RealRow) : Prop :=
 
 end RealRow
 
+@[ext] theorem RealRow.ext_fields {x y : RealRow}
+    (ha : x.a = y.a) (hb : x.b = y.b)
+    (hab : x.ab = y.ab) (he : x.empty = y.empty) : x = y := by
+  cases x
+  cases y
+  simp_all
+
 /-- A three-agent outcome over real-valued bundle probabilities. -/
 structure RealOutcome where
   r0 : RealRow
@@ -47,6 +54,12 @@ def goodBMass (x : RealOutcome) : ℝ :=
   x.r0.b + x.r1.b + x.r2.b + x.r0.ab + x.r1.ab + x.r2.ab
 
 end RealOutcome
+
+@[ext] theorem RealOutcome.ext_rows {x y : RealOutcome}
+    (h0 : x.r0 = y.r0) (h1 : x.r1 = y.r1) (h2 : x.r2 = y.r2) : x = y := by
+  cases x
+  cases y
+  simp_all
 
 /-- The original continuous fractional feasible set, with no denominator restriction. -/
 def RealFeasible (x : RealOutcome) : Prop :=
@@ -130,10 +143,11 @@ theorem leftIndicator_eq_sideIndicator (t : SixType) :
 theorem castOutcome_mechanism_eq_sideBenchmark (t0 t1 t2 : SixType) :
     castOutcome (mechanism t0 t1 t2) =
       sideBenchmark (isLeft t0) (isLeft t1) (isLeft t2) := by
-  unfold mechanism leftCount sideBenchmark sideCount
+  unfold mechanism leftCount sideBenchmark sideCount castOutcome
   rw [leftIndicator_eq_sideIndicator t0,
       leftIndicator_eq_sideIndicator t1,
       leftIndicator_eq_sideIndicator t2]
+  rfl
 
 /-- Every reachable benchmark row has zero `ab` mass and singleton mass 2/3. -/
 theorem sideBenchmark_row_shape (l0 l1 l2 : Bool) :
@@ -178,7 +192,7 @@ theorem realSD_preferredSingleton_ge
     preferredSingleton (isLeft t) x ≤ preferredSingleton (isLeft t) y := by
   rcases hSD with ⟨h1, h2, h3⟩
   cases t <;>
-    norm_num [preferredSingleton, realCum1, realCum2, realCum3,
+    simp [preferredSingleton, isLeft, realCum1, realCum2, realCum3,
       RealRow.prob, first, second, third] at h1 h2 h3 ⊢ <;>
     linarith
 
@@ -204,7 +218,8 @@ theorem sideBenchmark_unique_from_preferred
       preferredSingleton l2 y.r2) :
     y = sideBenchmark l0 l1 l2 := by
   cases l0 <;> cases l1 <;> cases l2 <;>
-    ext <;>
+    apply RealOutcome.ext_rows <;>
+    apply RealRow.ext_fields <;>
     norm_num [RealRow.mass, RealRow.nonemptyMass,
       RealOutcome.goodAMass, RealOutcome.goodBMass,
       preferredSingleton, sideBenchmark, sideCount, sideIndicator,
