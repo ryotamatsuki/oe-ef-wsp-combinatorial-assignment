@@ -42,43 +42,47 @@ Certificate facts: 18,000 EF cutoffs PASS, 27,000 deviations WSP PASS, 8,328 equ
 
 **Status: VERIFIED FINITE-DOMAIN SAT CERTIFICATE.**
 
-For `n=3`, define
+For `n=3`, `D_P_MIRROR = D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}` admits a symmetric closed-form repair of singleton PS satisfying feasibility, OE, EF, and WSP on all 1,000 ordered profiles.
 
-`D_P_MIRROR = D8_ACCEPTABLE_SINGLETONS + {P_A,P_B}`
+Certificate facts: 18,000 EF cutoffs PASS, 27,000 deviations WSP PASS, 8,376 equality deviations, minimum positive WSP margin `1/6`, maximum allocation denominator 6, exact 22-vertex continuous polytope, and positive rational SD-support weights with denominator at most 15. See `docs/BOUNDARY_ATTACK_P_MIRROR_RESULT.md`.
 
-with
+## T7 — Complete 16-type one-singleton-acceptable frontier
 
-- `P_A: ab > a > empty > b`;
-- `P_B: ab > b > empty > a`.
+**Status: VERIFIED FINITE-DOMAIN CONTINUOUS SAT CERTIFICATE.**
 
-A symmetric closed-form repair of singleton PS satisfies feasibility, OE, EF, and WSP on all `10^3=1,000` ordered profiles.
+For `n=3`, let `D16_ONE_SINGLETON_ACCEPTABLE` be the complete set of all 16 strict rankings over `{a,b,ab,empty}` in which at least one singleton is ranked above the outside option:
 
-The mechanism changes singleton PS at exactly 26 ordered profiles: the 13 one-sided `P_A` repair profiles and their exact `a <-> b` mirrors on the `P_B` side. Profiles mixing `P_A` and `P_B` require no additional repair.
+`D8_ACCEPTABLE_SINGLETONS + {H_A,H_B,P_A,P_B,U_A,U_B,W_A,W_B}`.
+
+A closed-form repair of singleton PS satisfies feasibility, OE, EF, and WSP on all `16^3=4,096` ordered profiles.
 
 Certificate facts:
-- 1,000 profiles;
-- 18,000 non-trivial EF cutoff inequalities: exact PASS;
-- 27,000 ordered unilateral deviations: exact WSP PASS;
-- 8,376 WSP equality deviations;
+- 4,096 ordered profiles;
+- 488 profiles changed relative to singleton PS;
+- 73,728 non-trivial EF cutoff inequalities: exact PASS;
+- 184,320 ordered unilateral deviations: exact WSP PASS;
+- 44,400 WSP equality deviations;
 - minimum positive WSP margin: `1/6`;
 - maximum allocation denominator: 6;
-- the original continuous feasible polytope is reconstructed exactly from 14 facets and has 22 vertices;
-- every profile has a strictly positive rational SD-support vector with denominator at most 15;
-- minimum support weight: `1/15`.
+- the original continuous fractional feasible polytope is reconstructed exactly and has 22 vertices;
+- every profile has a strictly positive rational SD-support vector checked exactly against all 22 vertices;
+- minimum support weight: `1/15`;
+- maximum support-weight denominator: 19.
 
-See `docs/BOUNDARY_ATTACK_P_MIRROR_RESULT.md`, `src/boundary_p_mirror_certificate.py`, and `tests/test_boundary_p_mirror_certificate.py`.
+The mechanism is WSP but not full SD-strategy-proof. See `docs/BOUNDARY_ATTACK_D16_RESULT.md`, `src/boundary16_certificate.py`, and `tests/test_boundary16_certificate.py`.
 
 ## Boundary implication
 
-T2 gives the clean analytic positive domain. T3–T6 show that one-sided and two-sided adjacent-swap outside-option crossings of both H and pair-first P types remain compatible with OE+EF+WSP for three agents.
+T2 gives a clean arbitrary-n positive theorem when both singletons are acceptable. T3–T7 show that for three agents the positive region extends much further: **every strict ranking with at least one singleton above the outside option can be accommodated simultaneously**.
 
-The search now increases granularity instead of continuing indefinitely one mirror class at a time. The next target is the complete 16-type domain containing every strict ranking for which **at least one singleton is acceptable**:
+This rules out the entire one-singleton-unacceptable frontier as an impossibility source for `n=3,m=2`.
 
-`D16_ONE_SINGLETON_ACCEPTABLE = D8_ACCEPTABLE_SINGLETONS + {H_A,H_B,P_A,P_B,U_A,U_B,W_A,W_B}`.
+The next negative-search frontier is therefore preferences with **both singletons below the outside option**, beginning with
 
-If D16 is SAT, investigate an analytic positive-domain theorem. If D16 is UNSAT, extract the smallest responsible subset and verify the impossibility with a complete continuous second formulation and an independent certificate.
+- `T_A: ab > empty > a > b`;
+- `T_B: ab > empty > b > a`.
 
-Only after this 16-type frontier is mapped should the search move to types with both singletons below the outside option.
+The D16 mechanism may merit a short analytic generalization attempt, but the unrestricted JET open problem remains unresolved and the main negative search should now move to the both-singletons-unacceptable frontier.
 
 ## Invalidated result
 
