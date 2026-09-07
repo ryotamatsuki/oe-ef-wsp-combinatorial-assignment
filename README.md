@@ -60,7 +60,21 @@ See `docs/BOUNDARY_SEARCH_PLAN.md`.
 
 A future candidate-face, MILP, SMT, or CEGIS implementation must pass `test_six_type_explicit_mechanism_is_accepted_by_solver` before it may be used for impossibility searches. Passing that fixture prevents a known false negative; it does not by itself prove solver completeness on new preference domains.
 
+## Lean formal verification
+
+A Lean 4 + Mathlib companion lives in `formal/lean/`. For the canonical three-agent six-type domain `D†={A,B,E,F,C,D}`, the Lean layer independently machine-checks, with exact rational arithmetic:
+
+- fractional feasibility on all 216 ordered profiles;
+- bundle-level envy-freeness, corresponding to the 3,888 non-self SD cutoff inequalities;
+- full bundle-level SD-strategy-proofness, covering every profile, agent position, and six-type report (3,240 genuine unilateral misreports after removing truthful-report equality cases).
+
+The continuous ordinal-efficiency argument is deliberately **not yet claimed as Lean-certified**. Its current authority remains the analytic proof against the unrestricted continuous fractional feasible set in `theory/six_type_explicit_mechanism.md`. See `formal/lean/CROSSWALK.md` for the exact source-to-theorem mapping and the conditions required before T1 can be called fully Lean-certified.
+
+The workflow `.github/workflows/lean.yml` runs the formal build in GitHub Actions, so a local Lean installation is not required for routine verification.
+
 ## Run
+
+Python regression suite:
 
 ```bash
 python -m pip install -e .
@@ -68,4 +82,12 @@ python -m pip install pytest
 pytest -q
 ```
 
-See `docs/THEOREM_STATUS.md`, `docs/REGRESSION_AUDIT.md`, and `theory/` for the mathematical status.
+Lean formal verification:
+
+```bash
+cd formal/lean
+lake update
+lake build --wfail
+```
+
+See `docs/THEOREM_STATUS.md`, `docs/REGRESSION_AUDIT.md`, `formal/lean/CROSSWALK.md`, and `theory/` for the mathematical and verification status.
