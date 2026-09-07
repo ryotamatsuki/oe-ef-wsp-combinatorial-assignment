@@ -1,3 +1,4 @@
+from fractions import Fraction as F
 from itertools import product
 
 from src.boundary2_pa_certificate import (
@@ -43,11 +44,11 @@ def test_boundary2_pa_exact_certificate():
     assert changed == 13
     assert ef_cutoffs == 13122
     assert max_denominator == 6
-    assert min_support_weight == 1 / 15
+    assert min_support_weight == F(1, 15)
     assert max_support_denominator == 15
 
     ok, checked, stats = verify_weak_strategyproofness(TYPES, 3, mechanism, RANKINGS)
     assert ok, stats
     assert checked == 17496
     assert stats["equality_deviations"] == 6204
-    assert stats["minimum_positive_margin"] == 1 / 6
+    assert stats["minimum_positive_margin"] == F(1, 6)
