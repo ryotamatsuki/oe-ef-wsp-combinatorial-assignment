@@ -2,9 +2,7 @@ name: Lean formal verification
 
 on:
   push:
-    branches:
-      - main
-      - "formal/**"
+    branches: [main]
     paths:
       - "formal/lean/**"
       - ".github/workflows/lean.yml"
@@ -16,12 +14,17 @@ on:
       - ".github/workflows/lean.yml"
   workflow_dispatch:
 
+concurrency:
+  group: oe-ef-wsp-combinatorial-assignment-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
